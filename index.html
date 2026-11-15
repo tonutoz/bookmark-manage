@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Manage</title>
+    <script>
+      // 화면이 그려지기 전에 밝게/어둡게를 정해 깜빡임을 막는다. 이후는 src/theme.ts 가 맡는다.
+      try {
+        var t = localStorage.getItem("bookmark-manage.theme");
+        var dark = t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+      } catch (e) {}
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

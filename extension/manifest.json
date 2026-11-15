@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Manage",
+  "version": "0.1.0",
+  "description": "보고 있는 페이지를 Bookmark Manage 앱에 저장합니다.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Bookmark Manage에 저장",
+    "default_icon": {
+      "16": "icons/16.png",
+      "32": "icons/32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/16.png",
+    "32": "icons/32.png",
+    "48": "icons/48.png",
+    "128": "icons/128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "alarms"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:43917/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "scripts": [
+      "api.js",
+      "background.js"
+    ]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "bookmark-manage@personal.local",
+      "strict_min_version": "121.0"
+    }
+  }
+}

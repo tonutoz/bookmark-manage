@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Bookmark Manage 앱 아이콘 원본. 고친 뒤 `npm run tauri icon src-tauri/app-icon.svg` 로 크기별 파일을 다시 만든다. -->
+  <rect x="64" y="64" width="896" height="896" rx="208" fill="#296CF2"/>
+  <path d="M344 228h336a40 40 0 0 1 40 40v520a16 16 0 0 1-25 13L512 676 329 801a16 16 0 0 1-25-13V268a40 40 0 0 1 40-40z" fill="#FFFFFF"/>
+  <polygon points="512.0,320.0 544.3,407.5 637.5,411.2 564.3,469.0 589.6,558.8 512.0,507.0 434.4,558.8 459.7,469.0 386.5,411.2 479.7,407.5" fill="#F59E0B" stroke="#F59E0B" stroke-width="20" stroke-linejoin="round"/>
+</svg>

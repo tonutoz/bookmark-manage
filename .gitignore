@@ -1,0 +1,47 @@
+# 의존성과 빌드 결과
+node_modules/
+dist/
+dist-ssr/
+src-tauri/target/
+# Tauri가 빌드할 때 만드는 권한 스키마
+src-tauri/gen/schemas/
+*.tsbuildinfo
+
+# 사용자 데이터. 저장소에 절대 올리지 않는다.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.bmbackup
+bookmarks-export*.json
+bookmarks-export*.html
+
+# 비밀 값
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+
+# 화면 확인용 임시 파일 (CLAUDE.md 참고)
+mock.html
+src/mock-harness.ts
+
+# 로그
+*.log
+npm-debug.log*
+
+# 편집기와 OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.iml
+*.sw?
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Claude Code 개인 설정
+.claude/settings.local.json
+*.local

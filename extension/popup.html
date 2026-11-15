@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bookmark Manage</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="head">
+      <span class="brand">Bookmark Manage</span>
+      <span id="connection" class="connection" data-state="checking">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="connection-text">확인 중</span>
+      </span>
+      <button type="button" id="toggle-settings" class="icon-button" aria-label="연결 설정" aria-expanded="false" aria-controls="settings">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"></path>
+        </svg>
+      </button>
+    </header>
+
+    <section id="settings" class="settings" hidden>
+      <h2>앱과 연결</h2>
+      <ol>
+        <li>Bookmark Manage 앱에서 설정을 엽니다.</li>
+        <li>브라우저 확장 탭에서 연결 토큰을 복사합니다.</li>
+        <li>아래에 붙여넣고 연결 확인을 누릅니다.</li>
+      </ol>
+      <div class="row">
+        <input id="token" type="password" aria-label="연결 토큰" placeholder="연결 토큰" />
+        <button type="button" id="connect" class="button">연결 확인</button>
+      </div>
+    </section>
+
+    <p id="duplicate" class="notice" role="alert" hidden>
+      <strong>이미 저장된 페이지입니다.</strong>
+      저장된 내용을 불러왔습니다. 고친 뒤 수정 저장을 누르세요.
+    </p>
+
+    <form id="save-form">
+      <div class="page">
+        <div id="favicon" class="favicon" aria-hidden="true"></div>
+        <div class="page-text">
+          <div id="page-title" class="page-title"></div>
+          <div id="page-host" class="mono"></div>
+        </div>
+      </div>
+
+      <label class="field" id="workspace-field" hidden>
+        저장 위치
+        <select id="workspace"></select>
+      </label>
+      <label class="field">
+        제목
+        <input id="title" />
+      </label>
+      <label class="field">
+        주소
+        <input id="url" class="mono-input" required />
+      </label>
+      <label class="field">
+        태그
+        <input id="tags" placeholder="개발 Rust 읽을거리" />
+      </label>
+      <label class="field">
+        메모
+        <textarea id="note" rows="2"></textarea>
+      </label>
+      <div class="field">
+        별점
+        <span id="stars" class="stars"></span>
+      </div>
+
+      <button type="submit" id="save" class="button primary">저장</button>
+    </form>
+
+    <p id="status" class="status" role="status"></p>
+
+    <script src="i18n.js"></script>
+    <script src="api.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

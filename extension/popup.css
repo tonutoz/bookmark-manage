@@ -1,0 +1,385 @@
+/* 앱(src/App.css)과 같은 색·글꼴을 쓴다. 글꼴은 확장에 함께 넣어 외부 서버에 접속하지 않는다. */
+@font-face {
+  font-family: "Manrope";
+  src: url("fonts/manrope-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("fonts/space-grotesk-latin-wght-normal.woff2") format("woff2");
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("fonts/jetbrains-mono-latin-wght-normal.woff2") format("woff2");
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-2: #334155;
+  --text-3: #475569;
+  --muted: #556377;
+  --accent: #296cf2;
+  --accent-soft: #e8f0fe;
+  --accent-text: #1d4fbf;
+  --danger: #b42318;
+  --ok: #15803d;
+  --warn: #b45309;
+  --warn-bg: #fff7e6;
+  --warn-border: #f2c56b;
+  --warn-text: #6b4100;
+  --star: #f59e0b;
+  --star-off: #cbd5e1;
+
+  --font-body: "Manrope", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  --font-mono: "JetBrains Mono", "Malgun Gothic", ui-monospace, monospace;
+
+  color-scheme: light;
+}
+
+/* 일본어에서는 일본어 글꼴을 먼저 쓴다. */
+:root:lang(ja) {
+  --font-body: "Manrope", "Yu Gothic UI", "Meiryo", "Hiragino Sans", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Yu Gothic UI", "Meiryo", "Hiragino Sans", sans-serif;
+  --font-mono: "JetBrains Mono", "Yu Gothic UI", "Meiryo", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --surface: #151d2e;
+    --border: #26324a;
+    --border-strong: #3a4863;
+    --text: #f1f5f9;
+    --text-2: #d5dde9;
+    --text-3: #b3bfd1;
+    --muted: #94a3b8;
+    --accent-soft: #1b2f5e;
+    --accent-text: #a9c5ff;
+    --danger: #ff8a7a;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --warn-bg: #2e2408;
+    --warn-border: #6b5210;
+    --warn-text: #fcd97a;
+    --star-off: #3a4863;
+    color-scheme: dark;
+  }
+}
+
+body {
+  width: 348px;
+  margin: 0;
+  padding: 0 14px 14px;
+  box-sizing: border-box;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ------------------------------------------------------------ 머리 */
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  margin: 0 -14px 12px;
+  padding: 0 6px 0 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  flex: 1;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+}
+
+.connection {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.connection[data-state="ok"] {
+  color: var(--ok);
+}
+
+.connection[data-state="off"] {
+  color: var(--warn);
+}
+
+.connection[data-state="setup"],
+.connection[data-state="error"] {
+  color: var(--danger);
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--text-2);
+}
+
+.icon-button:hover,
+.icon-button[aria-expanded="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+/* ------------------------------------------------------------ 연결 설정 */
+
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.settings h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settings ol {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+.row input {
+  flex: 1;
+}
+
+/* 중복 알림 */
+.notice {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--warn-border);
+  border-radius: 12px;
+  background: var(--warn-bg);
+  color: var(--warn-text);
+  font-size: 12px;
+}
+
+.notice strong {
+  display: block;
+  font-size: 13px;
+}
+
+/* ------------------------------------------------------------ 저장 폼 */
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.page {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.favicon {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.favicon img {
+  width: 20px;
+  height: 20px;
+}
+
+.page-text {
+  min-width: 0;
+}
+
+.page-title {
+  font-weight: 700;
+}
+
+.page-title,
+.page-text .mono {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+input,
+select,
+textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.mono-input {
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.stars button {
+  display: inline-flex;
+  padding: 2px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.button.primary {
+  min-height: 40px;
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.status {
+  margin: 10px 0 0;
+  min-height: 1.5em;
+  color: var(--text-3);
+}
+
+.status[data-kind="ok"] {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.status[data-kind="error"] {
+  color: var(--danger);
+}
