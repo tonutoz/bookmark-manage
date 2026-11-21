@@ -14,6 +14,7 @@ type DashboardData = {
   unopened: number;
   untagged: number;
   unrated: number;
+  noThumb: number;
   stale: number;
   singletons: number;
   /** [0] 은 별점 없음, [1]~[5] 는 그 별점 */
@@ -188,6 +189,12 @@ export function Dashboard({
       body: t("사이트별 묶음은 자동이지만 주제별로 보려면 태그가 필요합니다."),
       action: t("태그 붙이기"),
       go: () => onFilter({ quick: "untagged" }),
+    },
+    data.noThumb > 0 && {
+      title: t("썸네일 없는 북마크 {0}개", n(data.noThumb)),
+      body: t("카드 보기에서 알아보기 쉽도록, 자주 여는 것부터 썸네일을 붙여 보세요."),
+      action: t("썸네일 붙이기"),
+      go: () => onFilter({ quick: "noThumb", sort: "opens" }),
     },
     backupNote && { ...backupNote, action: t("백업 설정 열기"), go: onBackup },
   ].filter((todo) => todo !== false && todo !== null) as { title: string; body: string; action: string; go: () => void }[];

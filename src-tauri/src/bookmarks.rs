@@ -58,11 +58,13 @@ pub struct ListFilter {
     pub unopened: bool,
     /// 별점이 없는 것만
     pub unrated: bool,
+    /// 썸네일이 없는 것만
+    pub no_thumb: bool,
     /// 이 시각(unix 초) 이후로 열어본 적이 없는 것만. 한 번도 안 열었으면 추가한 날을 기준으로 본다.
     pub stale_before: Option<i64>,
     /// 이 시각(unix 초) 이후에 추가된 것만
     pub added_since: Option<i64>,
-    /// "recent"(기본) | "rating" | "title" | "opens"
+    /// "recent"(기본) | "oldest" | "rating" | "title" | "opens"
     pub sort: Option<String>,
     pub limit: Option<i64>,
     pub offset: Option<i64>,
@@ -412,6 +414,9 @@ fn conditions(filter: &ListFilter) -> (String, Vec<Value>) {
     if filter.unrated {
         sql.push_str(" AND b.rating IS NULL");
     }
+    if filter.no_thumb {
+        sql.push_str(" AND NOT EXISTS (SELECT 1 FROM thumbs.thumbnail th WHERE th.bookmark_id = b.id)");
+    }
     if let Some(before) = filter.stale_before {
         sql.push_str(" AND coalesce(b.last_opened_at, b.created_at) < ?");
         args.push(Value::Integer(before));
@@ -430,6 +435,7 @@ fn query(conn: &Connection, filter: &ListFilter, limit: i64) -> Result<Vec<Bookm
         Some("rating") => "b.rating IS NULL, b.rating DESC, b.created_at DESC, b.id DESC",
         Some("title") => "b.title = '', b.title COLLATE NOCASE, b.id",
         Some("opens") => "b.open_count DESC, b.last_opened_at DESC, b.id DESC",
+        Some("oldest") => "b.created_at, b.id",
         _ => "b.created_at DESC, b.id DESC",
     };
     let sql = format!("{SELECT}{conditions} ORDER BY {order} LIMIT ? OFFSET ?");
@@ -468,6 +474,8 @@ pub struct Dashboard {
     pub unopened: i64,
     pub untagged: i64,
     pub unrated: i64,
+    /// 썸네일이 없는 것
+    pub no_thumb: i64,
     /// 180일 넘게 안 연 것
     pub stale: i64,
     /// 그 사이트의 북마크가 하나뿐인 것
@@ -515,6 +523,7 @@ fn dashboard_at(conn: &Connection, now: i64) -> Result<Dashboard, String> {
                     untagged: r.get(5)?,
                     stale: r.get(6)?,
                     singletons: 0,
+                    no_thumb: 0,
                     unrated: ratings[0],
                     ratings,
                     top: Vec::new(),
@@ -525,6 +534,12 @@ fn dashboard_at(conn: &Connection, now: i64) -> Result<Dashboard, String> {
         board.tags = conn.query_row("SELECT count(DISTINCT tag_id) FROM bookmark_tag", [], |r| r.get(0))?;
         board.singletons = conn.query_row(
             "SELECT count(*) FROM (SELECT 1 FROM bookmark WHERE host <> '' GROUP BY host HAVING count(*) = 1)",
+            [],
+            |r| r.get(0),
+        )?;
+        board.no_thumb = conn.query_row(
+            "SELECT count(*) FROM bookmark b
+              WHERE NOT EXISTS (SELECT 1 FROM thumbs.thumbnail th WHERE th.bookmark_id = b.id)",
             [],
             |r| r.get(0),
         )?;
@@ -777,6 +792,12 @@ mod tests {
         assert_eq!(titles(ListFilter { sort: Some("rating".into()), ..Default::default() }), ["가방", "다람쥐", ""]);
         // 제목순: 제목 없는 것은 맨 뒤
         assert_eq!(titles(ListFilter { sort: Some("title".into()), ..Default::default() }), ["가방", "다람쥐", ""]);
+        // 오래된 순: 최근 추가순의 반대
+        let recent = titles(ListFilter::default());
+        let mut oldest = titles(ListFilter { sort: Some("oldest".into()), ..Default::default() });
+        assert_eq!(oldest[0], "다람쥐");
+        oldest.reverse();
+        assert_eq!(oldest, recent);
     }
 
     #[test]
@@ -909,6 +930,16 @@ mod tests {
         assert_eq!(n(ListFilter { unrated: true, ..Default::default() }), board.unrated);
         assert_eq!(n(ListFilter { stale_before: Some(now - STALE_AFTER), ..Default::default() }), board.stale);
         assert_eq!(n(ListFilter { added_since: Some(now - 7 * DAY), ..Default::default() }), board.recent);
+
+        // 썸네일: 하나에 붙이면 없는 것이 하나 줄고, 목록 개수도 그 숫자와 같다.
+        assert_eq!(board.no_thumb, 5);
+        let first = list(&conn, &ListFilter::default()).unwrap()[0].id;
+        crate::thumbs::set(&conn, first, &[0xFF, 0xD8, 0xFF, 0xE0]).unwrap();
+        let board = dashboard_at(&conn, now).unwrap();
+        assert_eq!(board.no_thumb, 4);
+        let without = list(&conn, &ListFilter { no_thumb: true, ..Default::default() }).unwrap();
+        assert_eq!(without.len() as i64, board.no_thumb);
+        assert!(without.iter().all(|b| b.id != first));
 
         let empty = dashboard_at(&db(), now).unwrap();
         assert_eq!((empty.total, empty.top.len(), empty.months.len()), (0, 0, 0));

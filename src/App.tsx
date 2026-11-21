@@ -64,6 +64,7 @@ function describe(filter: Filter) {
   if (filter.quick === "unrated") parts.push(t("별점 없음"));
   if (filter.quick === "stale") parts.push(t("6개월 넘게 안 연 것"));
   if (filter.quick === "singleton") parts.push(t("사이트에 하나뿐인 것"));
+  if (filter.quick === "noThumb") parts.push(t("썸네일 없음"));
   if (filter.query.trim()) parts.push(t("\"{0}\" 검색", filter.query.trim()));
   return parts.length ? parts.join(" · ") : t("전체");
 }
@@ -450,6 +451,7 @@ function App() {
                 onChange={(e) => patchFilter({ sort: e.target.value as Sort })}
               >
                 <option value="recent">{t("최근 추가순")}</option>
+                <option value="oldest">{t("오래된 순")}</option>
                 <option value="rating">{t("별점 높은순")}</option>
                 <option value="title">{t("제목순")}</option>
                 <option value="opens">{t("자주 여는 순")}</option>

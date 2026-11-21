@@ -1,10 +1,11 @@
 import { t } from "./i18n";
-const MAX_WIDTH = 400;
-const MAX_HEIGHT = 600;
+// 편집 패널의 큰 썸네일이 고해상도 화면에서도 흐리지 않도록 여유 있게 둔다.
+const MAX_WIDTH = 800;
+const MAX_HEIGHT = 1200;
 
 /**
  * 파일·붙여넣기·URL 어디서 온 이미지든 같은 경로로 줄인다.
- * 최대 400x600 에 맞춰 JPEG 로 다시 인코딩한 바이트를 돌려준다 (투명 배경은 흰색).
+ * 최대 800x1200 에 맞춰 JPEG 로 다시 인코딩한 바이트를 돌려준다 (투명 배경은 흰색).
  */
 export async function toThumbnail(source: Blob): Promise<number[]> {
   const src = URL.createObjectURL(source);

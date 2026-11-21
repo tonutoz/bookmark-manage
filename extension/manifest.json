@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Bookmark Manage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "보고 있는 페이지를 Bookmark Manage 앱에 저장합니다.",
   "action": {
     "default_popup": "popup.html",

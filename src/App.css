@@ -785,7 +785,7 @@ kbd {
 
 .detail {
   flex: none;
-  width: 340px;
+  width: 400px;
   box-sizing: border-box;
   padding: 16px 20px 20px;
   background: var(--surface);
@@ -827,7 +827,9 @@ kbd {
 
 .detail-thumb {
   flex: none;
-  height: 150px;
+  /* 패널 너비에 맞춰 16:10 으로. 화면 캡처의 위쪽이 넉넉히 보인다. */
+  aspect-ratio: 16 / 10;
+  height: auto;
   border-radius: 14px;
   font-size: 56px;
 }

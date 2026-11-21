@@ -37,8 +37,8 @@ export type SidebarCounts = {
 };
 
 /** 사이드바의 빠른 필터와, 대시보드에서 넘어올 때 쓰는 조건들. */
-export type Quick = "all" | "starred" | "untagged" | "recent" | "unopened" | "unrated" | "stale" | "singleton";
-export type Sort = "recent" | "rating" | "title" | "opens";
+export type Quick = "all" | "starred" | "untagged" | "recent" | "unopened" | "unrated" | "stale" | "singleton" | "noThumb";
+export type Sort = "recent" | "oldest" | "rating" | "title" | "opens";
 export type Layout = "grid" | "list";
 
 export type Filter = { query: string; tag: string | null; host: string | null; quick: Quick; sort: Sort };
@@ -61,6 +61,7 @@ export const toBackendFilter = (f: Filter) => ({
   singleton: f.quick === "singleton",
   unopened: f.quick === "unopened",
   unrated: f.quick === "unrated",
+  noThumb: f.quick === "noThumb",
   staleBefore: f.quick === "stale" ? staleBefore() : null,
   addedSince: f.quick === "recent" ? recentSince() : null,
   sort: f.sort,
